@@ -1,2 +1,2 @@
 效果图
-https://github.com/androidxiaosongzi/address_pickerview/blob/master/gif/untitled.gif
+![Alt text](https://github.com/androidxiaosongzi/address_pickerview/blob/master/gif/untitled.gif)
