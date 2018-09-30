@@ -99,6 +99,8 @@ public class AreaPickerView extends Dialog {
     private RecyclerView areaRecyclerView;
     private RecyclerView cityRecyclerView;
 
+    private boolean status;
+
     public AreaPickerView(@NonNull Context context, int themeResId, List<AddressBean> addressBeans) {
         super(context, themeResId);
         this.addressBeans = addressBeans;
@@ -109,6 +111,7 @@ public class AreaPickerView extends Dialog {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dialog_area_pickerview);
+        status = true;
         Window window = this.getWindow();
         /**
          * 位于底部
@@ -142,7 +145,8 @@ public class AreaPickerView extends Dialog {
         final RecyclerView provinceRecyclerView = provinceView.findViewById(R.id.recyclerview);
         cityRecyclerView = cityView.findViewById(R.id.recyclerview);
         areaRecyclerView = areaView.findViewById(R.id.recyclerview);
-
+        strings = new ArrayList<>();
+        strings.add("请选择");
         views = new ArrayList<>();
         views.add(provinceView);
         views.add(cityView);
@@ -349,9 +353,23 @@ public class AreaPickerView extends Dialog {
     }
 
     public void setSelect(int... value) {
-        strings = new ArrayList<>();
+        if (!status)
+            return;
+        strings.clear();
         if (value == null) {
             strings.add("请选择");
+            tabLayout.setupWithViewPager(viewPager);
+            viewPagerAdapter.notifyDataSetChanged();
+            tabLayout.getTabAt(0).select();
+            if (provinceSelected != -1)
+                addressBeans.get(provinceSelected).setStatus(false);
+            if (citySelected != -1)
+                addressBeans.get(provinceSelected).getChildren().get(citySelected).setStatus(false);
+            provinceSelected = -1;
+            citySelected = -1;
+            cityBeans.clear();
+            provinceAdapter.notifyDataSetChanged();
+            cityAdapter.notifyDataSetChanged();
             return;
         }
         if (value.length == 3) {
